@@ -20,11 +20,11 @@ type IGenericCrudController[E GormEntity[ID], ID GormEntityId] interface {
 
 // GenericCrudController is a Generic Crud Controller implementation.
 type GenericCrudController[E GormEntity[ID], ID GormEntityId] struct {
-	S IGenericCrudService[E, ID]
+	S *GenericCrudService[E, ID]
 }
 
 // NewController creates a new IGenericCrudController.
-func NewController[E GormEntity[ID], ID GormEntityId](S IGenericCrudService[E, ID]) IGenericCrudController[E, ID] {
+func NewController[E GormEntity[ID], ID GormEntityId](S *GenericCrudService[E, ID]) IGenericCrudController[E, ID] {
 	return &GenericCrudController[E, ID]{
 		S: S,
 	}
@@ -122,7 +122,7 @@ func (c *GenericCrudController[E, ID]) Update(w http.ResponseWriter, r *http.Req
 func (c *GenericCrudController[E, ID]) UpdateAll(w http.ResponseWriter, r *http.Request) {
 
 	var entities []E
-	
+
 	err := json.NewDecoder(r.Body).Decode(&entities)
 	if err != nil {
 		ErrorJSON(w, err)

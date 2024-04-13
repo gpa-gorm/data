@@ -15,7 +15,7 @@ type GormEntityId interface {
 	Id
 }
 
-// GoremEntity Generic Gorm Entity Interface.
+// GormEntity Generic Gorm Entity Interface.
 type GormEntity[ID GormEntityId] interface {
 	Entity[ID]
 	TableName() string
