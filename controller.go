@@ -1,6 +1,8 @@
 package data
 
 import (
+	"fmt"
+	"reflect"
 	"encoding/json"
 	"net/http"
 )
@@ -21,6 +23,7 @@ type IGenericCrudController[E GormEntity[ID], ID GormEntityId] interface {
 // GenericCrudController is a Generic Crud Controller implementation.
 type GenericCrudController[E GormEntity[ID], ID GormEntityId] struct {
 	S IGenericCrudService[E, ID]
+	
 }
 
 // NewController creates a new IGenericCrudController.
@@ -73,9 +76,16 @@ func (c *GenericCrudController[E, ID]) SaveAll(w http.ResponseWriter, r *http.Re
 // FindById provides find entity by id.
 func (c *GenericCrudController[E, ID]) FindById(w http.ResponseWriter, r *http.Request) {
 
+	var id ID
+
+    idType := reflect.TypeOf(id)
+	fmt.Println(idType)
+
+
 	id_ := r.URL.Query().Get("id")
-	genericId_ := AnyId(id_)
-	id := genericId_.(ID)
+
+	id = AnyId(id_).(ID)
+
 
 	entity, err := c.S.FindById(id, r.Context())
 	if err != nil {
