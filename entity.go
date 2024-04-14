@@ -1,10 +1,7 @@
 package data
 
-
 // ID is Base Id property For Entity.
-type Id interface {
-	comparable
-}
+type Id interface {}
 
 // Entity is Base Entity Interface.
 type Entity[ID Id] interface {
@@ -22,5 +19,11 @@ type GormEntity[ID GormEntityId] interface {
 	//TableName() string
 }
 
-// AnyId is Helper Interface for handling ID type as Any.
-type AnyId interface{}
+func ConvertToID(param interface{}) Id {
+	switch param := param.(type) {
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, string:
+		return Id(param)
+	default:
+		panic("Invalid ID type")
+	}
+}
