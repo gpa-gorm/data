@@ -20,11 +20,11 @@ type IGenericCrudController[E GormEntity[ID], ID GormEntityId] interface {
 
 // GenericCrudController is a Generic Crud Controller implementation.
 type GenericCrudController[E GormEntity[ID], ID GormEntityId] struct {
-	S *GenericCrudService[E, ID]
+	S IGenericCrudService[E, ID]
 }
 
 // NewController creates a new IGenericCrudController.
-func NewController[E GormEntity[ID], ID GormEntityId](S *GenericCrudService[E, ID]) IGenericCrudController[E, ID] {
+func NewController[E GormEntity[ID], ID GormEntityId](S IGenericCrudService[E, ID]) IGenericCrudController[E, ID] {
 	return &GenericCrudController[E, ID]{
 		S: S,
 	}
@@ -34,14 +34,14 @@ func NewController[E GormEntity[ID], ID GormEntityId](S *GenericCrudService[E, I
 func (c *GenericCrudController[E, ID]) Save(w http.ResponseWriter, r *http.Request) {
 
 	var entity E
-	
+
 	err := json.NewDecoder(r.Body).Decode(&entity)
 	if err != nil {
 		ErrorJSON(w, err)
 		return
 	}
 
-	_ ,err = c.S.Save(&entity, r.Context())
+	_, err = c.S.Save(&entity, r.Context())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -61,7 +61,7 @@ func (c *GenericCrudController[E, ID]) SaveAll(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	_ ,err = c.S.SaveAll(&entities, r.Context())
+	_, err = c.S.SaveAll(&entities, r.Context())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -109,7 +109,7 @@ func (c *GenericCrudController[E, ID]) Update(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	_ ,err = c.S.Update(&entity, r.Context())
+	_, err = c.S.Update(&entity, r.Context())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -129,7 +129,7 @@ func (c *GenericCrudController[E, ID]) UpdateAll(w http.ResponseWriter, r *http.
 		return
 	}
 
-	_ ,err = c.S.UpdateAll(&entities, r.Context())
+	_, err = c.S.UpdateAll(&entities, r.Context())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

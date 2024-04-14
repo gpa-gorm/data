@@ -5,6 +5,7 @@ package data
 
 import (
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -17,7 +18,7 @@ type ICrudRepository[E Entity[ID], ID Id] interface {
 	IRepository[E, ID] // implements
 
 	// <CRUD> operations
-	Save(entity *E, ctx context.Context) (*E, error) 
+	Save(entity *E, ctx context.Context) (*E, error)
 	SaveAll(entity *[]E, ctx context.Context) (*[]E, error)
 	FindById(id ID, ctx context.Context) (*E, error)
 	FindAll(ctx context.Context) (*[]E, error)
@@ -28,7 +29,6 @@ type ICrudRepository[E Entity[ID], ID Id] interface {
 
 	// Aggregate operations
 	Count(ctx context.Context) int64
-
 }
 
 // IGpaGormRepository is a Generic Gorm Crud IRepository interface.
@@ -36,7 +36,6 @@ type IGpaGormRepository[E GormEntity[ID], ID GormEntityId] interface {
 	ICrudRepository[E, ID]
 
 	// Gorm specific operations
-	
 
 	//Begin(opts ...*sql.TxOptions) GormRepository[E, ID]
 	//Rollback() error
@@ -54,6 +53,14 @@ func NewGpaGormRepository[E GormEntity[ID], ID GormEntityId](DB *gorm.DB) IGpaGo
 		DB: DB,
 	}
 }
+
+// NewGpaGormRepositoryImpl creates a new GpaGormRepository.
+func NewGpaGormRepositoryImpl[E GormEntity[ID], ID GormEntityId](DB *gorm.DB) *GpaGormRepository[E, ID] {
+	return &GpaGormRepository[E, ID]{
+		DB: DB,
+	}
+}
+
 
 // Save provides save entity to database.
 func (r *GpaGormRepository[E, ID]) Save(entity *E, ctx context.Context) (*E, error) {

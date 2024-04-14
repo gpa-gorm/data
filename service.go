@@ -19,23 +19,31 @@ type IGenericCrudService[E GormEntity[ID], ID GormEntityId] interface {
 
 // GenericCrudService is a Generic Crud Service implementation.
 type GenericCrudService[E GormEntity[ID], ID GormEntityId] struct {
-	R IGpaGormRepository[E, ID]
+	R ICrudRepository[E, ID]
+	//R *GpaGormRepository[E, ID]
 }
 
 // NewService creates a new IGenericCrudService.
-func NewService[E GormEntity[ID], ID GormEntityId](R IGpaGormRepository[E, ID]) IGenericCrudService[E, ID] {
+func NewService[E GormEntity[ID], ID GormEntityId](R ICrudRepository[E, ID]) IGenericCrudService[E, ID] {
+	return &GenericCrudService[E, ID]{
+		R: R,
+	}
+}
+
+// NewServiceImpl creates a new GenericCrudService.
+func NewServiceImpl[E GormEntity[ID], ID GormEntityId](R *GpaGormRepository[E, ID]) *GenericCrudService[E, ID] {
 	return &GenericCrudService[E, ID]{
 		R: R,
 	}
 }
 
 // Save provides save entity to database.
-func (s *GenericCrudService[E, ID]) Save(entity *E, ctx context.Context) (*E, error){
+func (s *GenericCrudService[E, ID]) Save(entity *E, ctx context.Context) (*E, error) {
 	return s.R.Save(entity, ctx)
 }
 
 // SaveAll provides save entities to database.
-func (s *GenericCrudService[E, ID]) SaveAll(entity *[]E, ctx context.Context) (*[]E, error){
+func (s *GenericCrudService[E, ID]) SaveAll(entity *[]E, ctx context.Context) (*[]E, error) {
 	return s.R.SaveAll(entity, ctx)
 }
 

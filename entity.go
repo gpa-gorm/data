@@ -1,5 +1,6 @@
 package data
 
+
 // ID is Base Id property For Entity.
 type Id interface {
 	comparable
@@ -7,7 +8,7 @@ type Id interface {
 
 // Entity is Base Entity Interface.
 type Entity[ID Id] interface {
-	GetId() ID
+	//GetId() ID
 }
 
 // GormEntityId is Generic Gorm Entity ID Interface.
@@ -18,7 +19,7 @@ type GormEntityId interface {
 // GormEntity Generic Gorm Entity Interface.
 type GormEntity[ID GormEntityId] interface {
 	Entity[ID]
-	TableName() string
+	//TableName() string
 }
 
 // AnyId is Helper Interface for handling ID type as Any.
