@@ -1,0 +1,29 @@
+version: '3'
+
+volumes:
+  generic_db:
+
+services:
+  generic-db:
+    image: generic-db:latest
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+      args:
+        - POSTGRES_VERSION=14.6
+    container_name: generic-db
+    user: postgres
+    #networks:
+    #  portfolio_net:
+    #    ipv4_address: ${POSTGRES_SVC_IP_ADDRESS}
+    env_file:
+      - .env
+    expose:
+      - '5432'
+    ports:
+      - '5432:5432'
+    volumes:
+      - generic_db:/var/lib/postgres
+    restart: on-failure
+    cap_add:
+      - SYS_NICE # CAP_SYS_NICE
