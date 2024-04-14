@@ -6,6 +6,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-chi/cors v1.2.1
 	github.com/go-playground/validator/v10 v10.19.0
+	github.com/gpa-gorm/data v0.0.1
 	github.com/spf13/viper v1.18.2
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.9
@@ -16,7 +17,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/gpa-gorm/data v0.0.0-20240414161612-41c9bc4e9b99 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
