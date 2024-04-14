@@ -2,10 +2,9 @@ package data
 
 import (
 	"encoding/json"
-	//"fmt"
+	"reflect"
 	"net/http"
-	//"reflect"
-	//"strconv"
+	"strconv"
 )
 
 // IGenericCrudController is a interface for Generic Crud Controller.
@@ -78,15 +77,36 @@ func (c *GenericCrudController[E, ID]) SaveAll(w http.ResponseWriter, r *http.Re
 func (c *GenericCrudController[E, ID]) FindById(w http.ResponseWriter, r *http.Request) {
 
 	id_ := r.URL.Query().Get("id")
-	id := ConvertToID(id_).(ID)
-
-	entity, err := c.S.FindById(id, r.Context())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	
+	var genericId ID
+	idType := reflect.TypeOf(genericId)
+	switch t := idType; t.Kind() {
+	case reflect.String:
+		id := ConvertToID(id_).(ID)
+		entity, err := c.S.FindById(id, r.Context())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		SuccessResponse(w, entity)
 		return
+	case reflect.Int:
+		id_, err := strconv.Atoi(id_)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		id := ConvertToID(id_).(ID)
+		entity, err := c.S.FindById(id, r.Context())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		SuccessResponse(w, entity)
+		return
+	default:
+		panic("Invalid ID type")
 	}
-
-	SuccessResponse(w, entity)
 }
 
 // FindAll provides find all entities.
@@ -160,15 +180,36 @@ func (c *GenericCrudController[E, ID]) SoftDelete(w http.ResponseWriter, r *http
 func (c *GenericCrudController[E, ID]) Delete(w http.ResponseWriter, r *http.Request) {
 
 	id_ := r.URL.Query().Get("id")
-	id := ConvertToID(id_).(ID)
-
-	err := c.S.Delete(id, r.Context())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	
+	var genericId ID
+	idType := reflect.TypeOf(genericId)
+	switch t := idType; t.Kind() {
+	case reflect.String:
+		id := ConvertToID(id_).(ID)
+		err := c.S.Delete(id, r.Context())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		SuccessResponse(w, nil)
 		return
+	case reflect.Int:
+		id_, err := strconv.Atoi(id_)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		id := ConvertToID(id_).(ID)
+		err = c.S.Delete(id, r.Context())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		SuccessResponse(w, nil)
+		return
+	default:
+		panic("Invalid ID type")
 	}
-
-	SuccessResponse(w, nil)
 }
 
 // Count provides count entities.
